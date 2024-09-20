@@ -16,7 +16,6 @@ router.get('/sheets-data', async (req, res) => {
         // Verify Firebase token
         const decodedToken = await admin.auth().verifyIdToken(token);
         const { uid, email } = decodedToken;  // Get Firebase UID and email
-        console.log("CC", uid)
         // Check if the user exists in the database
         let user = await findUserByFirebaseUid(uid);
 
