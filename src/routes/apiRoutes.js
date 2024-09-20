@@ -1,27 +1,46 @@
-const express = require("express");
-const { verifyFirebaseToken } = require("../middlewares/authMiddleware");
-const { getGoogleSheetsData } = require("../services/sheetsService");
+const express = require('express');
+const admin = require('../config/firebaseAdmin');  // Importing initialized Firebase Admin SDK
+const { getSheetsData } = require('../services/sheetsService');
+const { findUserByFirebaseUid, createUser } = require('../models/userModel');
+
 const router = express.Router();
-const { signInWithEmailAndPassword, auth } = require("../config/firebaseAdmin");
 
-// API route to login and get Google Sheets data
-router.post("/login-and-get-sheets", async (req, res) => {
-  const { email, password } = req.body;
-  
-  try {
-    // Firebase login
-    const userCredential = await signInWithEmailAndPassword(auth, email, password);
-    const user = userCredential.user;
-    const token = await user.getIdToken();
+router.get('/sheets-data', async (req, res) => {
+    const token = req.headers.authorization?.split(' ')[1];  // Extract Bearer token
 
-    // Get Google Sheets data
-    const sheetsData = await getGoogleSheetsData(token);
+    if (!token) {
+        return res.status(401).json({ error: 'No token provided' });
+    }
 
-    res.status(200).json({ user, token, sheetsData });
-  } catch (error) {
-    console.error("Login and fetching sheets data failed", error.message);
-    res.status(500).json({ message: "Error during login or fetching data" });
-  }
+    try {
+        // Verify Firebase token
+        const decodedToken = await admin.auth().verifyIdToken(token);
+        const { uid, email } = decodedToken;  // Get Firebase UID and email
+        console.log("CC", uid)
+        // Check if the user exists in the database
+        let user = await findUserByFirebaseUid(uid);
+
+        if (!user) {
+            // If user doesn't exist, create a new user in the database
+            user = await createUser(uid, email);
+        }
+
+        // Fetch Google Sheets data
+        const sheetsData = await getSheetsData();
+
+        // Send the response (don't include password)
+        return res.json({
+            user: {
+                id: user.id,
+                email: user.email,
+                created_at: user.created_at
+            },
+            sheetsData
+        });
+    } catch (error) {
+        console.error('Error verifying token or fetching sheets data:', error);
+        return res.status(500).json({ error: 'Failed to retrieve sheets data' });
+    }
 });
 
 module.exports = router;

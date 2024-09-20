@@ -1,22 +1,24 @@
 const admin = require('../config/firebaseAdmin');
-const { UnauthorizedError } = require('../errors/customErrors');
 
-const authMiddleware = async (req, res, next) => {
+// Middleware to verify Firebase token
+const verifyFirebaseToken = async (req, res, next) => {
+  const token = req.headers.authorization?.split('Bearer ')[1];
+
+  if (!token) {
+    return res.status(401).json({ error: 'No token provided' });
+  }
+
   try {
-    const authHeader = req.headers.authorization;
-
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
-      throw new UnauthorizedError('No token provided');
-    }
-
-    const token = authHeader.split(' ')[1];
+    // Verify the Firebase token
     const decodedToken = await admin.auth().verifyIdToken(token);
-
-    req.user = decodedToken;
+    req.user = decodedToken;  // Attach the decoded token (user info) to the request
     next();
   } catch (error) {
-    next(new UnauthorizedError('Invalid token'));
+    console.error('Error verifying Firebase token:', error);
+    return res.status(403).json({ error: 'Unauthorized' });
   }
 };
 
-module.exports = authMiddleware;
+module.exports = {
+  verifyFirebaseToken,
+};

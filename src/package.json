@@ -10,6 +10,7 @@
     "dotenv": "^10.0.0",
     "express": "^4.17.1",
     "firebase-admin": "^10.0.0",
-    "googleapis": "^85.0.0"
+    "googleapis": "^85.0.0",
+    "pg": "^8.13.0"
   }
 }
