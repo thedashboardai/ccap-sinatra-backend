@@ -1,7 +1,6 @@
 const Profile = require('../models/Profile');
 const jwt = require('jsonwebtoken');
 
-// Middleware to verify JWT token
 function authenticateToken(req, res, next) {
     const token = req.header('Authorization').replace('Bearer ', '');
     if (!token) return res.status(401).json({ message: 'Access Denied' });
@@ -13,8 +12,7 @@ function authenticateToken(req, res, next) {
     });
 }
 
-// Get User Profile
-async function getProfile(req, res) {
+exports.getProfile = async (req, res) => {
     try {
         const profile = await Profile.findOne({ where: { user_id: req.user.userId } });
         if (!profile) return res.status(404).json({ message: 'Profile not found' });
@@ -24,15 +22,13 @@ async function getProfile(req, res) {
         console.error(error);
         res.status(500).json({ message: 'Server error' });
     }
-}
+};
 
-// Update User Profile
-async function updateProfile(req, res) {
+exports.updateProfile = async (req, res) => {
     try {
         const profile = await Profile.findOne({ where: { user_id: req.user.userId } });
         if (!profile) return res.status(404).json({ message: 'Profile not found' });
 
-        // Update the profile with the new data
         await profile.update(req.body);
 
         res.json({ message: 'Profile updated successfully' });
@@ -40,10 +36,4 @@ async function updateProfile(req, res) {
         console.error(error);
         res.status(500).json({ message: 'Server error' });
     }
-}
-
-module.exports = {
-    authenticateToken,
-    getProfile,
-    updateProfile
 };

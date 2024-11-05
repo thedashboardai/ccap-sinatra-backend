@@ -1,6 +1,5 @@
 const s3Util = require('../utils/s3Util');
 
-// Generate Pre-Signed URL for uploading files
 exports.getPresignedUrl = (req, res) => {
     try {
         const { fileName } = req.query;

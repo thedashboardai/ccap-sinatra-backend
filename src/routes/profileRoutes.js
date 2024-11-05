@@ -1,14 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const profileController = require('../controllers/profileController');
+const { authenticateToken } = profileController;
 
-// Ensure these functions are defined and available
-const { authenticateToken, getProfile, updateProfile } = profileController;
-
-// Get Profile
-router.get('/', authenticateToken, getProfile);
-
-// Update Profile
-router.put('/update', authenticateToken, updateProfile);
+router.get('/', authenticateToken, profileController.getProfile);
+router.put('/update', authenticateToken, profileController.updateProfile);
 
 module.exports = router;

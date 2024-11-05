@@ -32,12 +32,12 @@ const Profile = sequelize.define('Profile', {
     past_employer: DataTypes.STRING,
     past_position: DataTypes.STRING,
     past_work_hours: DataTypes.INTEGER,
-    resume_url: DataTypes.STRING,
+    resume_url: DataTypes.TEXT,
     ready_to_work_now: DataTypes.BOOLEAN,
     work_start_date: DataTypes.DATE,
     interests: DataTypes.ARRAY(DataTypes.STRING),
     food_handlers_card: DataTypes.BOOLEAN,
-    food_handlers_card_url: DataTypes.STRING,
+    food_handlers_card_url: DataTypes.TEXT,
     servsafe_credential: DataTypes.BOOLEAN,
     culinary_years: DataTypes.INTEGER
 }, {
