@@ -1,0 +1,13 @@
+const admin = require('firebase-admin');
+const token = "eyJhbGciOiJSUzI1NiIsImtpZCI6IjhkMjUwZDIyYTkzODVmYzQ4NDJhYTU2YWJhZjUzZmU5NDcxNmVjNTQiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL3NlY3VyZXRva2VuLmdvb2dsZS5jb20vc2luYXRyYS1jY2FwIiwiYXVkIjoic2luYXRyYS1jY2FwIiwiYXV0aF90aW1lIjoxNzM5MTcxNzUxLCJ1c2VyX2lkIjoiSkk5dUdmUHppRGVROTB1dUdXb08zSnRBWnlWMiIsInN1YiI6IkpJOXVHZlB6aURlUTkwdXVHV29PM0p0QVp5VjIiLCJpYXQiOjE3MzkxNzE3NTEsImV4cCI6MTczOTE3NTM1MSwiZW1haWwiOiJ1c2VyQGV4YW1wbGUuY29tIiwiZW1haWxfdmVyaWZpZWQiOmZhbHNlLCJmaXJlYmFzZSI6eyJpZGVudGl0aWVzIjp7ImVtYWlsIjpbInVzZXJAZXhhbXBsZS5jb20iXX0sInNpZ25faW5fcHJvdmlkZXIiOiJwYXNzd29yZCJ9fQ.fwIN-q1Jc_3fFw6uunCXo6nNlRsORcjWaLCb7wQpctRxtsaifZ5E0PKk1bY_eN8P_2oCswiPdRzcQT40YOaA-apfOmU33ReeoxcTjd6KNxE4MWjG-QtnEPU3m4uVAx5XomFXMXtHWhd1L8DK0Xl4NTq-4BtQfnpJfnMRCmaSIhwEl--plQ2y9R1LCFw-2WQazgGFFAcH4e4aqh6LMGJZUqNYHkOAUPsHerHwbHTqrX_678Ep_uC6EsypYuRuMgmZ1FZJetEzXCfkbZkDNHklOd9CODhzMvreaQ00jcpmKvxHumjNySQDYAluL2-j1nFIM1ZnhNz-UZgVCnlyUMvO7Q"; // Replace with your Firebase token
+
+async function verifyToken() {
+  try {
+    const decodedToken = await admin.auth().verifyIdToken(token);
+    console.log("Decoded Token:", decodedToken);
+  } catch (error) {
+    console.error("Token Verification Failed:", error.message);
+  }
+}
+
+verifyToken();
