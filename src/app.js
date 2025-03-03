@@ -1,5 +1,6 @@
 require('dotenv').config();
 const express = require('express');
+const cors = require('cors');
 const bodyParser = require('body-parser');
 const webhookRoutes = require('./routes/webhookRoutes');
 const authRoutes = require('./routes/authRoutes');
@@ -7,6 +8,7 @@ const profileRoutes = require('./routes/profileRoutes');
 const portfolioRoutes = require('./routes/portfolioRoutes');
 
 const app = express();
+app.use(cors());
 app.use(bodyParser.json());
 
 app.use('/api/webhook', webhookRoutes);
